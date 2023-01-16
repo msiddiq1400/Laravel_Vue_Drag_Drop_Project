@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('tasks',[TaskController::class, 'showTasks']);
+Route::patch('tasks/{id}', [TaskController::class, 'updateTasksOrder']);
+Route::put('tasks/updateAll', [TaskController::class, 'updateTasksStatus']);
