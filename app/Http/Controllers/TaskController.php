@@ -14,7 +14,7 @@ class TaskController extends Controller
         if($data['group']) {
             $q->where('group',$data['group']);
         }
-        return $q->orderBy('priority')->select('id','name','priority')->get();
+        return $q->orderBy('priority')->select('id','name','priority', 'group')->get();
     }
 
     public function updateTasksOrder(Request $request)
@@ -40,7 +40,7 @@ class TaskController extends Controller
         if($data['group']) {
             $q->where('group',$data['group']);
         }
-        return $q->orderBy('priority')->select('id','name','priority')->get();
+        return $q->orderBy('priority')->select('id','name','priority', 'group')->get();
     }
 
     public function updateName(Request $request) {
@@ -56,7 +56,7 @@ class TaskController extends Controller
         if($data['group']) {
             $q->where('group',$data['group']);
         }
-        return $q->orderBy('priority')->select('id','name','priority')->get();
+        return $q->orderBy('priority')->select('id','name','priority', 'group')->get();
     }
 
     public function deleteTask(Request $request) {
@@ -70,7 +70,7 @@ class TaskController extends Controller
         if($data['group']) {
             $q->where('group',$data['group']);
         }
-        return $q->orderBy('priority')->select('id','name','priority')->get();
+        return $q->orderBy('priority')->select('id','name','priority', 'group')->get();
     }
 
     public function addTask(Request $request) {
@@ -98,6 +98,6 @@ class TaskController extends Controller
         if($data['group']) {
             $q->where('group',$data['group']);
         }
-        return $q->orderBy('priority')->select('id','name','priority')->get();
+        return $q->orderBy('priority')->select('id','name','priority', 'group')->get();
     }
 }

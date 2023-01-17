@@ -79,6 +79,7 @@ export default defineComponent({
         <template #item="{element}">
             <div class="name-style">
                 <input :id="element.id" v-model="element.name"/>
+                <text class="group-style">{{element.group}}</text>
                 <button @click="updateTask(element.id, element.name)">Update</button>
                 <button @click="deleteTask(element.id)">Delete</button>
             </div>
@@ -92,5 +93,10 @@ export default defineComponent({
     font-size: 24px;
     display: flex;
     justify-content: center;
+}
+.group-style {
+    margin-left: 5px;
+    margin-right : 5px;
+    background-color: antiquewhite;
 }
 </style>
