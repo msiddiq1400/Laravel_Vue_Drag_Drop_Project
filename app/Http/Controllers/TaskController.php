@@ -9,14 +9,7 @@ class TaskController extends Controller
 {
     public function showTasks()
     {
-        $tasks = Task::orderBy('order')->select('id','title','order','status')->get();
-        $tasksCompleted = $tasks->filter(function ($task, $key) {
-            return $task->status;
-        })->values();
-        $tasksNotCompleted = $tasks->filter(function ($task, $key) {
-            return  ! $task->status;
-        })->values();
-        return view('demos.alltasks',compact('tasksCompleted','tasksNotCompleted'));
+        return Task::orderBy('priority')->select('id','name','priority')->get();
     }
 
     public function updateTasksStatus(Request $request, $id)

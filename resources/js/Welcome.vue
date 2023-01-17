@@ -1,6 +1,8 @@
 <script>
 import items from './constants';
 import draggable from "vuedraggable";
+import axios from 'axios';
+
 console.log(items)
 export default {
     name: "App",
@@ -10,7 +12,26 @@ export default {
             itemsList: items,
         };
     },
-    methods: {},
+    methods: {
+        checkMove(event) {},
+
+        setDragTrue(event) {
+        },
+
+        setDragFalse(event) {
+            console.log("111")
+            console.log(event.newIndex)
+            console.log(event.oldIndex)
+            console.log(this.getAllTasks())
+        },
+
+        async getAllTasks() {
+            const url = 'http://localhost:8000/tasks';
+            const response = await axios.get(url);
+            const data = await response.data
+            console.log(data)   
+        }
+    },
 };
 </script>
 
@@ -19,9 +40,10 @@ export default {
     <draggable 
         v-model="itemsList" 
         group="people" 
-        @start="drag=true" 
-        @end="drag=false" 
+        @start="setDragTrue" 
+        @end="setDragFalse" 
         item-key="id"
+        :move="checkMove"
     >
     <template #item="{element}">
         <div class="name-style">{{element.name}}</div>
