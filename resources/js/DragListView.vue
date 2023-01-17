@@ -10,12 +10,23 @@ export default defineComponent({
         const response = await axios.get(url);
         const data = await response.data;
         return {
-            itemsList: data
+            dataArray: data,
+        }
+    },
+    data() {
+        return {
+            itemsList: this.dataArray
         }
     },
     methods: {
-        setDragTrue(event) {},
-        setDragFalse(event) {},
+
+        async setDragFalse(event) {
+            const prevIndex = event.oldIndex + 1;
+            const newIndex = event.newIndex + 1;
+            const url = `http://localhost:8000/update/order?newIndex=${newIndex}&prevIndex=${prevIndex}`;
+            const response = await axios.get(url);
+            this.itemsList = await response.data;
+        }
     },
 })
 </script>
@@ -24,11 +35,10 @@ export default defineComponent({
 <template>
     <div>
         <draggable 
-            v-model="itemsList" 
+            v-model="this.itemsList" 
             group="people" 
-            @start="setDragTrue" 
             @end="setDragFalse" 
-            item-key="priority"
+            item-key="id"
         >
         <template #item="{element}">
             <div class="name-style">

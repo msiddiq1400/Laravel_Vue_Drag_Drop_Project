@@ -19,5 +19,4 @@ Route::get('/', function () {
 });
 
 Route::get('tasks',[TaskController::class, 'showTasks']);
-Route::patch('tasks/{id}', [TaskController::class, 'updateTasksOrder']);
-Route::put('tasks/updateAll', [TaskController::class, 'updateTasksStatus']);
+Route::get('update/order', [TaskController::class, 'updateTasksOrder']);

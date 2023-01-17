@@ -25,18 +25,22 @@ class TaskController extends Controller
 
     public function updateTasksOrder(Request $request)
     {
-        $this->validate($request, [
-            'tasks.*.order' => 'required|numeric',
-        ]);
-        $tasks = Task::all();
-        foreach ($tasks as $task) {
-            $id = $task->id;
-            foreach ($request->tasks as $tasksNew) {
-                if ($tasksNew['id'] == $id) {
-                    $task->update(['order' => $tasksNew['order']]);
-                }
-            }
-        }
-        return response('Updated Successfully.', 200);
+        $data = $request->all();
+
+        //get both tasks with priority
+        $task1 = Task::where('priority', $data['newIndex'])->first();
+        $task2 = Task::where('priority', $data['prevIndex'])->first();
+
+
+        //swap the priorities
+        $temp = $task1->priority;
+
+        $task1->priority = $task2->priority;
+        $task1->save();
+
+        $task2->priority = $temp;
+        $task2->save();
+
+        return Task::orderBy('priority')->select('id','name','priority')->get();
     }
 }
