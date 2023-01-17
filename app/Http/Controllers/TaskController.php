@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function showTasks()
+    public function showTasks(Request $request)
     {
-        return Task::orderBy('priority')->select('id','name','priority')->get();
+        $data = $request->all();
+        $q = Task::query();
+        if($data['group']) {
+            $q->where('group',$data['group']);
+        }
+        return $q->orderBy('priority')->select('id','name','priority')->get();
     }
 
     public function updateTasksOrder(Request $request)
@@ -31,7 +36,11 @@ class TaskController extends Controller
         $task2->save();
 
         //return all the updated tasks
-        return Task::orderBy('priority')->select('id','name','priority')->get();
+        $q = Task::query();
+        if($data['group']) {
+            $q->where('group',$data['group']);
+        }
+        return $q->orderBy('priority')->select('id','name','priority')->get();
     }
 
     public function updateName(Request $request) {
@@ -43,7 +52,11 @@ class TaskController extends Controller
         $task->save();
 
         //return all the updated tasks
-        return Task::orderBy('priority')->select('id','name','priority')->get();
+        $q = Task::query();
+        if($data['group']) {
+            $q->where('group',$data['group']);
+        }
+        return $q->orderBy('priority')->select('id','name','priority')->get();
     }
 
     public function deleteTask(Request $request) {
@@ -53,6 +66,38 @@ class TaskController extends Controller
         Task::find($data['id'])->delete();
 
         //return all the updated tasks
-        return Task::orderBy('priority')->select('id','name','priority')->get();
+        $q = Task::query();
+        if($data['group']) {
+            $q->where('group',$data['group']);
+        }
+        return $q->orderBy('priority')->select('id','name','priority')->get();
+    }
+
+    public function addTask(Request $request) {
+        $data = $request->all();
+
+        //set data for the new task
+        $lowestPriorityTask = Task::orderBy('priority', 'DESC')->select('id','name','priority')->first();
+        if(!$lowestPriorityTask) {
+            $priority = 1;
+        } else {
+            $priority = $lowestPriorityTask->priority + 1;
+        }
+        $name = $data['name'];
+        $group = $data['group'] ?? 'A';
+
+        //create new task
+        Task::create([
+            'name' => $name,
+            'priority' => $priority,
+            'group' => $group
+        ]);
+
+        //return all the updated tasks
+        $q = Task::query();
+        if($data['group']) {
+            $q->where('group',$data['group']);
+        }
+        return $q->orderBy('priority')->select('id','name','priority')->get();
     }
 }

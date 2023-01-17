@@ -5,40 +5,63 @@ import draggable from "vuedraggable";
 
 export default defineComponent({
     components: {draggable},
-    async setup() {
-        const url = 'http://localhost:8000/tasks';
-        const response = await axios.get(url);
-        const data = await response.data;
+    props: {
+        group: String
+    },
+    async setup(props) {
+        let data;
+        try {
+            console.log("seyup called")
+            const url = `http://localhost:8000/tasks?group=${props.group}`;
+            const response = await axios.get(url);
+            data = await response.data;
+        } catch (err) {
+            data = []
+        }
         return {
             dataArray: data,
         }
     },
     data() {
         return {
+            selectedGroup: this.group,
             itemsList: this.dataArray
         }
     },
     methods: {
         async setDragFalse(event) {
-            const prevIndex = event.oldIndex + 1;
-            const newIndex = event.newIndex + 1;
-            const url = `http://localhost:8000/update/order?newIndex=${newIndex}&prevIndex=${prevIndex}`;
-            const response = await axios.get(url);
-            this.itemsList = await response.data;
+            try {
+                const prevIndex = event.oldIndex + 1;
+                const newIndex = event.newIndex + 1;
+                const url = `http://localhost:8000/update/order?newIndex=${newIndex}&prevIndex=${prevIndex}&group=${this.selectedGroup}`;
+                const response = await axios.get(url);
+                this.itemsList = await response.data;
+            } catch (err) {
+                console.log(err)
+                alert('Something went wrong 2')
+            }
         },
 
         async updateTask(id, newText) {
-            const url = 'http://localhost:8000/task/update';
-            const response = await axios.post(url, {id, name: newText});
-            this.itemsList = await response.data;
-            alert('Task updated Successfully')
+            try {
+                const url = `http://localhost:8000/task/update?group=${this.group}`;
+                const response = await axios.post(url, {id, name: newText});
+                this.itemsList = await response.data;
+                alert('Task updated Successfully')
+            } catch (err) {
+                alert('Something went wrong')
+            }
         },
 
         async deleteTask(id) {
-            const url = 'http://localhost:8000/task/delete';
-            const response = await axios.post(url, {id});
-            this.itemsList = await response.data;
-            alert('Task Deleted Successfully')
+            try {
+                const url = `http://localhost:8000/task/delete?group=${this.group}`;
+                const response = await axios.post(url, {id});
+                this.itemsList = await response.data;
+                alert('Task Deleted Successfully')
+            } catch (err) {
+                alert('Something went wrong')
+            }
         }
     },
 })
@@ -55,7 +78,7 @@ export default defineComponent({
         >
         <template #item="{element}">
             <div class="name-style">
-                <input :id="element.id" class="text-style" v-model="element.name"/>
+                <input :id="element.id" v-model="element.name"/>
                 <button @click="updateTask(element.id, element.name)">Update</button>
                 <button @click="deleteTask(element.id)">Delete</button>
             </div>
@@ -69,8 +92,5 @@ export default defineComponent({
     font-size: 24px;
     display: flex;
     justify-content: center;
-}
-.text-style {
-    
 }
 </style>
