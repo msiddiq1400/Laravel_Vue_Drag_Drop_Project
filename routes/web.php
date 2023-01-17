@@ -20,3 +20,5 @@ Route::get('/', function () {
 
 Route::get('tasks',[TaskController::class, 'showTasks']);
 Route::get('update/order', [TaskController::class, 'updateTasksOrder']);
+Route::post('/task/update', [TaskController::class, 'updateName']);
+Route::post('/task/delete', [TaskController::class, 'deleteTask']);

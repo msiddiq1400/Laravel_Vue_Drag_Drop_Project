@@ -12,17 +12,6 @@ class TaskController extends Controller
         return Task::orderBy('priority')->select('id','name','priority')->get();
     }
 
-    public function updateTasksStatus(Request $request, $id)
-    {
-        $this->validate($request, [
-            'status' => 'required|boolean',
-        ]);
-        $task = Task::find($id);
-        $task->status = $request->status;
-        $task->save();
-        return response('Updated Successfully.', 200);
-    }
-
     public function updateTasksOrder(Request $request)
     {
         $data = $request->all();
@@ -41,6 +30,29 @@ class TaskController extends Controller
         $task2->priority = $temp;
         $task2->save();
 
+        //return all the updated tasks
+        return Task::orderBy('priority')->select('id','name','priority')->get();
+    }
+
+    public function updateName(Request $request) {
+        $data = $request->all();
+
+        //update task
+        $task = Task::find($data['id']);
+        $task->name = $data['name'];
+        $task->save();
+
+        //return all the updated tasks
+        return Task::orderBy('priority')->select('id','name','priority')->get();
+    }
+
+    public function deleteTask(Request $request) {
+        $data = $request->all();
+
+        //update task
+        Task::find($data['id'])->delete();
+
+        //return all the updated tasks
         return Task::orderBy('priority')->select('id','name','priority')->get();
     }
 }
